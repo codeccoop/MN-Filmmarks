@@ -2,8 +2,6 @@
 
 namespace MN\Filmmarks;
 
-//use Shortcodes\save_film;
-
 /**
  * Plugin Name:     MN Filmmarks
  * Plugin URI:      https://github.com/codeccoop/mn-filmmarks
@@ -18,12 +16,15 @@ namespace MN\Filmmarks;
  */
 
 define("MN_FILMMARKS_VERSION", "1.0.0");
+
 require_once('includes/class-model.php');
-require_once('includes/shortcodes/list.php');
+require_once('includes/shortcodes/ListFilmmarks.php');
+require_once('includes/shortcodes/SaveFilmmark.php');
 
 class Plugin
 {
 
+    private $shortcodes = [];
 
     public static function activate()
     {
@@ -34,24 +35,15 @@ class Plugin
     {
     }
 
-    public static function init()
+    public function init()
     {
+        $this->register_shortcodes();
+    }
 
-        add_shortcode('mn_filmmark_list', function ($atts) {
-            return \MN\Filmmarks\Shortcodes\list_films($atts);
-        });
-        add_shortcode('mn_filmmark_save', function ($atts) {
-            return Shortcodes\save_film($atts);
-        });
-        add_action('wp_enqueue_scripts', function () {
-            wp_register_script(
-                'filmmarks-save-buttons',
-                plugin_dir_path(__FILE__) . '/assets/js/save-buttons.js',
-                [],
-                MN_FILMMARKS_VERSION,
-                true
-            );
-        });
+    private function register_shortcodes()
+    {
+        $this->shortcodes[Shortcodes\SaveFilmmark::$tag] = new Shortcodes\SaveFilmmark();
+        $this->shortcodes[Shortcodes\ListFilmmarks::$tag] = new Shortcodes\ListFilmmarks();
     }
 }
 
@@ -64,5 +56,6 @@ register_deactivation_hook(__FILE__, function () {
 });
 
 add_action('init', function () {
-    Plugin::init();
+    $plugin = new Plugin();
+    $plugin->init();
 });
