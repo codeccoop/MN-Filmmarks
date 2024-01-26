@@ -11,7 +11,6 @@ class Shortcode
 
     public function __construct()
     {
-        error_log(static::class);
         add_shortcode(static::$tag, [$this, 'callback']);
     }
 
