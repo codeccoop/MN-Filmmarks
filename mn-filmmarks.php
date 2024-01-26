@@ -17,9 +17,9 @@ namespace MN\Filmmarks;
 
 define("MN_FILMMARKS_VERSION", "1.0.0");
 
-require_once('includes/class-model.php');
-require_once('includes/shortcodes/ListFilmmarks.php');
-require_once('includes/shortcodes/SaveFilmmark.php');
+require_once 'includes/class-model.php';
+require_once 'includes/shortcodes/ListFilmmarks.php';
+require_once 'includes/shortcodes/SaveFilmmark.php';
 
 class Plugin
 {
