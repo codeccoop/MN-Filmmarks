@@ -39,16 +39,21 @@ class Model
         dbDelta($sql);
     }
 
-    private static function as_array($data)
+    public function as_json()
+    {
+        return Model::as_array($this);
+    }
+
+    private static function as_array($object)
     {
         $array = [
-            'user_id' => (int) $data->user_id,
-            'list_name' => (string) $data->list_name,
-            'film_id' => (int) $data->film_id
+            'user_id' => (int) $object->user_id,
+            'list_name' => (string) $object->list_name,
+            'film_id' => (int) $object->film_id
         ];
 
-        if (isset($data['id'])) {
-            $array['id'] = (int) $data['id'];
+        if (isset($object->id)) {
+            $array['id'] = (int) $object->id;
         }
 
         return $array;
@@ -66,7 +71,7 @@ class Model
         $sql . ';';
 
         $result = $wpdb->get_results($sql);
-        if (sizeof($result) === 0) throw new Exception("Not Found", 404);
+        if (!is_array($result) || sizeof($result) === 0) throw new Exception("Not Found", 404);
 
         $data = [];
         foreach ($result as $entry) {
@@ -77,12 +82,28 @@ class Model
         return $data;
     }
 
-    public static function get_by_id($film_id)
+    public static function get_by_user_film_id($user_id, $film_id)
     {
         global $wpdb;
-        $sql = "";
+        $table_name = Model::get_table_name();
+        $sql = "SELECT * FROM {$table_name}
+        WHERE user_id = {$user_id} AND film_id = {$film_id}";
         $result = $wpdb->get_results($sql);
-        if (sizeof($result) === 0) throw new Exception("Not Found", 404);
+        if (!is_array($result) || sizeof($result) === 0) throw new Exception("Not Found", 404);
+        $entry = $result[0];
+        $datum = Model::as_array($entry);
+
+        return new Model($datum);
+    }
+
+    public static function get_by_id($id)
+    {
+        global $wpdb;
+        $table_name = Model::get_table_name();
+        $sql = "SELECT * FROM {$table_name}
+        WHERE id = {$id}";
+        $result = $wpdb->get_results($sql);
+        if (!is_array($result) || sizeof($result) === 0) throw new Exception("Not Found", 404);
         $entry = $result[0];
         $datum = Model::as_array($entry);
 
@@ -135,14 +156,19 @@ class Model
 
     public function save()
     {
+        if ($this->id) {
+            return $this->update();
+        } else {
+            return $this->insert();
+        }
+    }
+
+    private function insert()
+    {
         global $wpdb;
         $table_name = Model::get_table_name();
 
-        if ($this->id) {
-            return $this->update();
-        }
-
-        return $wpdb->insert(
+        $inserteds = $wpdb->insert(
             $table_name,
             [
                 'user_id' => $this->user_id,
@@ -150,6 +176,12 @@ class Model
                 'film_id' => $this->film_id
             ]
         );
+
+        if ($inserteds === 0) {
+            throw new Exception('Internal Server Error', 500);
+        }
+
+        return Model::get_by_id($wpdb->insert_id);
     }
 
     private function update()
@@ -157,7 +189,7 @@ class Model
         global $wpdb;
         $table_name = Model::get_table_name();
 
-        return $wpdb->update(
+        $updateds = $wpdb->update(
             $table_name,
             [
                 'user_id' => $this->user_id,
@@ -168,6 +200,12 @@ class Model
                 'id' => $this->id
             ]
         );
+
+        if ($updateds === 0) {
+            throw new Exception('Internal Server Error', 500);
+        }
+
+        return Model::get_by_id($this->id);
     }
 
     public function remove()
@@ -181,5 +219,7 @@ class Model
                 'id' => $this->id,
             ]
         );
+
+        return $this;
     }
 }
