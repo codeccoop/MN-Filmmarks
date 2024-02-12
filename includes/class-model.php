@@ -151,7 +151,7 @@ class Model
 
     public function get_film()
     {
-        return get_post_by_id($this->film_id);
+        return get_post($this->film_id);
     }
 
     public function save()

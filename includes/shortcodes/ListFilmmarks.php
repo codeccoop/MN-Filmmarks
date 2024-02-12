@@ -2,6 +2,7 @@
 
 namespace MN\Filmmarks\Shortcodes;
 
+use Exception;
 use MN\Filmmarks\Model;
 
 require_once 'Shortcode.php';
@@ -12,9 +13,15 @@ class ListFilmmarks extends Shortcode
 
     public function callback($atts, $content, $tag)
     {
-        $current_user = wp_get_current_user_id();
+        $user_id = get_current_user_id();
+        if (!$user_id) {
+            return "";
+        }
+
         $list_name = isset($atts['list_name']) ? $atts['list_name'] : null;
-        $filmmarks = Model::get_by_user($current_user, $list_name);
+
+        $filmmarks = Model::get_by_user($user_id, $list_name);
+        error_log(print_r($filmmarks, true));
 
         $html = '';
         foreach ($filmmarks as $filmmark) {
