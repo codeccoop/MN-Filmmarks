@@ -18,26 +18,35 @@ class ListFilmmarks extends Shortcode
             return "";
         }
 
-        $list_name = isset($atts['list_name']) ? $atts['list_name'] : null;
+        $list_name = isset($atts['list_name']) ? $atts['list_name'] : 'favourites';
 
-        $filmmarks = Model::get_by_user($user_id, $list_name);
-        error_log(print_r($filmmarks, true));
+        try {
+            $filmmarks = Model::get_by_user($user_id, $list_name);
+        } catch (Exception) {
+            return '';
+        }
 
+        global $post;
+        $global_post = $post;
         $html = '';
         foreach ($filmmarks as $filmmark) {
             $film = $filmmark->get_film();
+            $post = $film;
+            setup_postdata($film);
             $html .= apply_filters('mn_filmmark_film', $this->template($film), $film);
         }
 
+        wp_reset_postdata();
+        $post = $global_post;
         return $html;
     }
 
     private function template($film)
     {
         ob_start();
-?>
+        ?>
         <div class="film"><?= $film->post_title ?></div>
 <?php
-        return ob_get_clean();
+                return ob_get_clean();
     }
 }
