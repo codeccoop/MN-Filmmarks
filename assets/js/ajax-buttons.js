@@ -7,9 +7,9 @@ document.addEventListener("DOMContentLoaded", () => {
         (ev) => {
           ev.preventDefault();
           ev.stopPropagation();
-          const action = ev.target.dataset.action;
-          const film_id = ev.target.dataset.filmid;
-          const user_id = ev.target.dataset.userid;
+          const action = btn.dataset.action;
+          const film_id = btn.dataset.filmid;
+          const user_id = btn.dataset.userid;
           const query = new URLSearchParams();
           query.set("action", action + "_filmmark");
           query.set("_ajax_nonce", ajaxFilmmarks.nonce);
@@ -27,8 +27,10 @@ document.addEventListener("DOMContentLoaded", () => {
           })
             .then((res) => res.json())
             .then((data) => {
-              ev.target.innerText = action === "drop" ? "Guardar" : "Borrar";
-              ev.target.dataset.action = action === "drop" ? "save" : "drop";
+              btn.dataset.action = action === "drop" ? "save" : "drop";
+              btn.dispatchEvent(
+                new CustomEvent("ajax:change", { detail: { action } }),
+              );
             });
         },
         true,
