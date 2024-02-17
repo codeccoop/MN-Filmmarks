@@ -26,13 +26,19 @@ class ListFilmmarks extends Shortcode
             return '';
         }
 
+        $current_lang = pll_current_language();
+
         global $post;
         $global_post = $post;
-        // $html = '<h4 class="wp-block-heading has-text-color has-link-color mn-filmmarks__list-title" style="color: #ffffff">' . __($list_name, "miradanativa") . '</h4>';
-        $html = ''; // '<div class="wp-block-group archive-content archive-film is-layout-constrained wp-block-group-is-layout-constrained mn-filmmarks__list">';
 
+        $html = '';
         foreach ($filmmarks as $filmmark) {
-            $film = $filmmark->get_film();
+            $film_id = pll_get_post($filmmark->film_id, $current_lang);
+            if (!$film_id) {
+                continue;
+            }
+
+            $film = get_post($film_id);
             $post = $film;
             setup_postdata($film);
             $html .= apply_filters('mn_filmmarks_film', $this->template($film), $film);

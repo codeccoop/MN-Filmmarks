@@ -23,6 +23,14 @@ class SaveFilmmark extends Shortcode
         if (!$user_id) {
             return '';
         }
+
+        $default_lang = pll_default_language();
+        $film_id = pll_get_post($film_id, $default_lang);
+
+        if (!$film_id) {
+            return '';
+        }
+
         try {
             $filmmark = Model::get_by_user_film_id($user_id, $film_id);
         } catch (Exception $e) {

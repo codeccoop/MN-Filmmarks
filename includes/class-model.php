@@ -9,9 +9,9 @@ class Model
     private static $table_name = "user_filmmarks";
 
     private $id;
-    private $user_id;
-    private $list_name;
-    private $film_id;
+    public $user_id;
+    public $list_name;
+    public $film_id;
 
     public static function get_table_name()
     {
@@ -71,7 +71,9 @@ class Model
         $sql . ';';
 
         $result = $wpdb->get_results($sql);
-        if (!is_array($result) || sizeof($result) === 0) throw new Exception("Not Found", 404);
+        if (!is_array($result) || sizeof($result) === 0) {
+            throw new Exception("Not Found", 404);
+        }
 
         $data = [];
         foreach ($result as $entry) {
@@ -82,14 +84,19 @@ class Model
         return $data;
     }
 
-    public static function get_by_user_film_id($user_id, $film_id)
+    public static function get_by_user_film_id($user_id, $film_id, $list_name = null)
     {
         global $wpdb;
         $table_name = Model::get_table_name();
         $sql = "SELECT * FROM {$table_name}
         WHERE user_id = {$user_id} AND film_id = {$film_id}";
+        if ($list_name) {
+            $sql .= " AND list_name = $list_name";
+        }
         $result = $wpdb->get_results($sql);
-        if (!is_array($result) || sizeof($result) === 0) throw new Exception("Not Found", 404);
+        if (!is_array($result) || sizeof($result) === 0) {
+            throw new Exception("Not Found", 404);
+        }
         $entry = $result[0];
         $datum = Model::as_array($entry);
 
@@ -103,7 +110,9 @@ class Model
         $sql = "SELECT * FROM {$table_name}
         WHERE id = {$id}";
         $result = $wpdb->get_results($sql);
-        if (!is_array($result) || sizeof($result) === 0) throw new Exception("Not Found", 404);
+        if (!is_array($result) || sizeof($result) === 0) {
+            throw new Exception("Not Found", 404);
+        }
         $entry = $result[0];
         $datum = Model::as_array($entry);
 
