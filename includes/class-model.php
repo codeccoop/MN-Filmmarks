@@ -91,7 +91,7 @@ class Model
         $sql = "SELECT * FROM {$table_name}
         WHERE user_id = {$user_id} AND film_id = {$film_id}";
         if ($list_name) {
-            $sql .= " AND list_name = $list_name";
+            $sql .= " AND list_name = '$list_name'";
         }
         $result = $wpdb->get_results($sql);
         if (!is_array($result) || sizeof($result) === 0) {
