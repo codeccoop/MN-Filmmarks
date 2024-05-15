@@ -21,7 +21,12 @@ class UserLists extends Shortcode
         try {
             $lists = Model::get_by_user($user_id);
         } catch (Exception $e) {
-            return '';
+            if ($e->getCode() !== 404) {
+                return '';
+            }
+
+            $list = (new Model(['name' => 'favorites', 'user_id' => $user_id]))->save();
+            $lists = [$list];
         }
 
         $html = '';
@@ -35,7 +40,7 @@ class UserLists extends Shortcode
     private function template($list)
     {
         ob_start(); ?>
-        <div class="wpct-bm-list"><?= $list->name ?></div>
+        <div class="wpct-bm-list"><?= $list->title ?></div>
         <?php
         return ob_get_clean();
     }

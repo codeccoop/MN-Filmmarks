@@ -11,9 +11,6 @@ function wpct_bm_user_lists()
     $user_id = (int) $_POST['user_id'];
     $post_id = (int) $_POST['post_id'];
 
-    // $default_lang = pll_default_language();
-    // $film_id = pll_get_post($film_id, $default_lang);
-
     try {
         $lists = BookMarkList::get_by_user($user_id);
     } catch (Exception $e) {
@@ -26,7 +23,7 @@ function wpct_bm_user_lists()
     <h4><?= __('Save bookmark on list', 'wpct-bm') ?></h4>
     <ul class="wpct-bm-lists">
         <?php foreach ($lists as $list) : $bookmarked = $list->has_bookmark($post_id); ?>
-        <li class="wpct-bm-list" id="<?= $list->id ?>" data-bookmarked="<?= $bookmarked ?>"><?= __(trim($list->name), 'wpct-bm') ?></li>
+        <li class="wpct-bm-list" id="<?= $list->id ?>" data-bookmarked="<?= $bookmarked ?>"><?= $list->title ?></li>
         <?php endforeach; ?>
         <?php if (empty($lists)) : ?>
         <li class="wpct-bm-list"><?= __('favorites', 'wpct-bm') ?></li>

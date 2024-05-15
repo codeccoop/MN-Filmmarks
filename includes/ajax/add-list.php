@@ -11,6 +11,10 @@ function wpct_bm_add_list()
     $user_id = (int) $_POST['user_id'];
     $list_name = (string) $_POST['list_name'];
 
+    if (empty($list_name)) {
+        throw new Exception('Bad Request', 400);
+    }
+
     try {
         BookMarkList::get_by_name($user_id, $list_name);
         throw new Exception('Bad Request', 400);
@@ -23,7 +27,7 @@ function wpct_bm_add_list()
     $list = (new BookMarkList(
         [
             'user_id' => $user_id,
-            'name' => $list_name,
+            'name' => trim($list_name),
         ]
     ))->save();
 

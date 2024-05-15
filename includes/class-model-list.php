@@ -11,6 +11,7 @@ class BookMarkList
 
     public $id;
     public $name;
+    public $title;
     public $user_id;
 
     public static function get_table_name()
@@ -151,6 +152,7 @@ PRIMARY KEY  (id)
 
         $this->user_id = (int) $data['user_id'];
         $this->name = (string) $data['name'];
+        $this->title = __($this->name, 'wpct-bm');
 
         if (empty($this->user_id)) {
             throw new Exception("Bad Request", 400);
@@ -251,12 +253,16 @@ PRIMARY KEY  (id)
         global $wpdb;
         $table_name = self::get_table_name();
 
-        return $wpdb->delete(
+        $success = $wpdb->delete(
             $table_name,
             [
                 'id' => $this->id,
             ]
         );
+
+        if ($success === false) {
+            throw new Exception('Internal Server Error', 500);
+        }
 
         do_action('wpct_bm_drop_list', $this->id);
         return $this;

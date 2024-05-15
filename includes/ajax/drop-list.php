@@ -1,5 +1,6 @@
 <?php
 
+use WPCT_BM\BookMark;
 use WPCT_BM\BookMarkList;
 
 add_action('wp_ajax_wpct_bm_drop_list', 'wpct_bm_drop_list');
@@ -19,5 +20,6 @@ function wpct_bm_drop_list()
     }
 
     $list->remove();
+    BookMark::delete_by_list($list->id);
     wp_send_json($list->as_json(), 200);
 }

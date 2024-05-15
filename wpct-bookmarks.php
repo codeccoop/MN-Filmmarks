@@ -122,7 +122,16 @@ add_action('delete_post', function ($post_id) {
 }, 10, 1);
 
 add_filter('wpct_bm_user_lists', function ($lists, $user_id) {
-    return BookMarkList::get_by_user($user_id);
+    try {
+        return BookMarkList::get_by_user($user_id);
+    } catch (Exception $e) {
+        if ($e->getCode() !== 404) {
+            throw $e;
+        }
+    }
+
+    $list = (new BookMarkList(['name' => 'favorites', 'user_id' => $user_id]))->save();
+    return [$list];
 }, 10, 2);
 
 add_action('init', function () {
