@@ -20,6 +20,9 @@ function wpct_bm_drop_list()
     }
 
     $list->remove();
-    BookMark::delete_by_list($list->id);
-    wp_send_json($list->as_json(), 200);
+    // BookMark::delete_by_list($list->id);
+    wp_send_json([
+        'message' => __('List removed', 'wpct-bc'),
+        'data' => $list->as_json()
+    ], 200);
 }

@@ -33,8 +33,23 @@ msgid "https://www.codeccoop.org"
 msgstr "https://www.codeccoop.org"
 
 #: includes/ajax/user-lists.php:26
-msgid "Save bookmark on list"
-msgstr "Guarda el marcador en una lista"
+msgid "Save bookmark"
+msgstr "Guarda el marcador"
+
+msgid "Your lists"
+msgstr "Tus listas"
+
+msgid "Bookmark saved"
+msgstr "Marcador guardado"
+
+msgid "Bookmark removed"
+msgstr "Marcador borrado"
+
+msgid "List added"
+msgstr "Lista añadida"
+
+msgid "List removed"
+msgstr "Lista borrada"
 
 #. Description of the plugin
 msgid "WordPress bookmarks"

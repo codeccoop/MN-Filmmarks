@@ -21,5 +21,8 @@ function wpct_bm_drop_bookmark()
     }
 
     $bookmark->remove();
-    wp_send_json($bookmark->as_json(), 200);
+    wp_send_json([
+        'message' => __('Bookmark removed', 'wpct-bm'),
+        'data' => $bookmark->as_json()
+    ], 200);
 }

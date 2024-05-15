@@ -31,5 +31,8 @@ function wpct_bm_add_list()
         ]
     ))->save();
 
-    wp_send_json($list->as_json(), 200);
+    wp_send_json([
+        'message' => __('List added', 'wpct-bm'),
+        'data' => $list->as_json()
+    ], 200);
 }

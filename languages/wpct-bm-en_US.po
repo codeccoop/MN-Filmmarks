@@ -18,7 +18,7 @@ msgstr ""
 
 #. Author of the plugin
 msgid "Còdec Cooperativa"
-msgstr ""
+msgstr "Còdec Cooperativa"
 
 #: includes/ajax/user-lists.php:32
 msgid "favorites"
@@ -33,8 +33,23 @@ msgid "https://www.codeccoop.org"
 msgstr "https://www.codeccoop.org"
 
 #: includes/ajax/user-lists.php:26
-msgid "Save bookmark on list"
-msgstr "Save bookmark on list"
+msgid "Save bookmark"
+msgstr "Save bookmark"
+
+msgid "Your lists"
+msgstr "Your lists"
+
+msgid "Bookmark saved"
+msgstr "Bookmark saved"
+
+msgid "Bookmark removed"
+msgstr "Bookmark removed"
+
+msgid "List added"
+msgstr "List added"
+
+msgid "List removed"
+msgstr "List removed"
 
 #. Description of the plugin
 msgid "WordPress bookmarks"

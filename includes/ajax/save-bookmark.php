@@ -34,5 +34,8 @@ function wpct_bm_save_bookmark()
         ]
     ))->save();
 
-    wp_send_json($bookmark->as_json(), 200);
+    wp_send_json([
+        'message' => __('Bookmark saved', 'wpct-bm'),
+        'data' => $bookmark->as_json()
+    ], 200);
 }

@@ -19,20 +19,24 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function saveBookmark({ listId, postId, userId, bookMarked }) {
-    const action = bookMarked ? "wpct_bm_drop_bookmark" : "wpct_bm_save_bookmark";
+    const action = bookMarked
+      ? "wpct_bm_drop_bookmark"
+      : "wpct_bm_save_bookmark";
     return doRequest(action, {
       user_id: userId,
       post_id: postId,
       list_id: listId,
     })
-      .then((res) => res.json())
-      .then((data) => {
-        if (typeof data !== "object" || !data.post_id) {
-          throw new Error("Bad response");
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(res);
         }
 
-        data.action = action;
-        return data;
+        return res.json();
+      })
+      .then((json) => {
+        json.data.action = action;
+        return json;
       });
   }
 
@@ -68,8 +72,17 @@ document.addEventListener("DOMContentLoaded", () => {
           userId,
           bookMarked: Boolean(list.dataset.bookmarked),
         })
+          .then(({ message, data }) => {
+            modal.innerHTML = `<p class="wpct-bm-msg success">${message}</p>`;
+            return new Promise((res) => {
+              setTimeout(() => {
+                res(data);
+              }, 1000);
+            });
+          })
           .then((res) => {
-            const bookMarked = res.action === "wpct_bm_save_bookmark" ? "1" : "";
+            const bookMarked =
+              res.action === "wpct_bm_save_bookmark" ? "1" : "";
             list.setAttribute("data-bookmarked", bookMarked);
 
             const filmBookMarked =
@@ -81,7 +94,9 @@ document.addEventListener("DOMContentLoaded", () => {
               filmBookMarked ? "1" : "0",
             );
 
-            bookMark.dispatchEvent(new CustomEvent("ajax:change", { detail: res }));
+            bookMark.dispatchEvent(
+              new CustomEvent("ajax:change", { detail: res }),
+            );
 
             closeModal(modal);
           })

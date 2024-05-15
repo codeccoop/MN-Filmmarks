@@ -30,8 +30,13 @@ class BookMarkList extends Shortcode
             $list = Model::get_favourite($user_id);
         }
 
+        $bookmarks = $list->get_bookmarks();
+        if (count($bookmarks) === 0) {
+            return $content;
+        }
+
         $html = '';
-        foreach ($list->get_bookmarks() as $bookmark) {
+        foreach ($bookmarks as $bookmark) {
             $html .= apply_filters('wpct_bm_bookmark_template', $this->template($bookmark), $bookmark);
         }
 

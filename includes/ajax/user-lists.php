@@ -20,7 +20,9 @@ function wpct_bm_user_lists()
     }
 
     ob_start(); ?>
-    <h4><?= __('Save bookmark on list', 'wpct-bm') ?></h4>
+    <h4><?= __('Save bookmark', 'wpct-bm') ?></h4>
+    <p><?= __('Your lists', 'wpct-bm') ?></p>
+    <hr/>
     <ul class="wpct-bm-lists">
         <?php foreach ($lists as $list) : $bookmarked = $list->has_bookmark($post_id); ?>
         <li class="wpct-bm-list" id="<?= $list->id ?>" data-bookmarked="<?= $bookmarked ?>"><?= $list->title ?></li>
