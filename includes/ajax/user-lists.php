@@ -26,10 +26,10 @@ function wpct_bm_user_lists()
     <h4><?= __('Save bookmark on list', 'wpct-bm') ?></h4>
     <ul class="wpct-bm-lists">
         <?php foreach ($lists as $list) : $bookmarked = $list->has_bookmark($post_id); ?>
-        <li class="wpct-bm-list" id="<?= $list->id ?>" data-bookmarked="<?= $bookmarked ?>"><?= $list->name ?></li>
+        <li class="wpct-bm-list" id="<?= $list->id ?>" data-bookmarked="<?= $bookmarked ?>"><?= __(trim($list->name), 'wpct-bm') ?></li>
         <?php endforeach; ?>
         <?php if (empty($lists)) : ?>
-        <li class="wpct-bm-list"><?= __('fauvorites', 'wpct-bm') ?></li>
+        <li class="wpct-bm-list"><?= __('favorites', 'wpct-bm') ?></li>
         <?php endif; ?>
     </ul>
     <?php

@@ -122,5 +122,17 @@ add_action('delete_post', function ($post_id) {
 }, 10, 1);
 
 add_filter('wpct_bm_user_lists', function ($lists, $user_id) {
-    return BookMarkList::get_by_user($user_id); 
+    return BookMarkList::get_by_user($user_id);
+}, 10, 2);
+
+add_action('init', function () {
+    load_plugin_textdomain('wpct-bm', false, dirname(plugin_basename(__FILE__)) . '/languages');
+});
+
+add_filter('load_textdomain_mofile', function ($mofile, $domain) {
+    if ('wpct-bm' === $domain && false !== strpos($mofile, WP_LANG_DIR . '/plugins/')) {
+        $locale = apply_filters('plugin_locale', determine_locale(), $domain);
+        $mofile = WP_PLUGIN_DIR . '/' . dirname(plugin_basename(__FILE__)) . '/languages/' . $domain . '-' . $locale . '.mo';
+    }
+    return $mofile;
 }, 10, 2);
